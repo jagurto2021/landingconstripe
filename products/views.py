@@ -22,12 +22,18 @@ class CancelView(TemplateView):
 
 class ProductLandingPageView(TemplateView):
     template_name = "landing.html"
-
+#modificar aqui
     def get_context_data(self, **kwargs):
-        product = Product.objects.get(name="Test Product")
+        #product = Product.objects.get(name="Test Product")
+        #context = super(ProductLandingPageView, self).get_context_data#(**kwargs)
+        #context.update({
+        #    "product": product,
+        #    "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY
+        #})
+        products = Product.objects.all()
         context = super(ProductLandingPageView, self).get_context_data(**kwargs)
         context.update({
-            "product": product,
+            "products": products,
             "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY
         })
         return context
@@ -79,7 +85,7 @@ def stripe_webhook(request):
         # Invalid payload
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
+        # Invalid signature, verificacion de la firma falla
         return HttpResponse(status=400)
 
     # Handle the checkout.session.completed event
